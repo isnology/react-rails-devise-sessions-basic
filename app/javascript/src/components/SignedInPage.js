@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react'
+import { Redirect } from 'react-router-dom'
 import Button from './Button'
 
-function SignedInPage({ onSignOut }) {
+function SignedInPage({ signedIn, onSignOut }) {
+  if (!signedIn) {return (<Redirect to="/" />)}
   return (
       <Fragment>
         <h2>Signed in</h2>

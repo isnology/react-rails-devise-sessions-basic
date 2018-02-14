@@ -1,14 +1,12 @@
 import React, { Component, Fragment } from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { isSignedIn, signOut } from './api/auth'
-import  SignUpForm  from './components/SignUpForm'
-import  SignInForm  from './components/SignInForm'
+import  SignInPage  from './components/SignInPage'
 import  SignedInPage  from './components/SignedInPage'
 
 
 class App extends Component {
   state = {
-    text: "How are you all?",
     user: null
   }
 
@@ -35,7 +33,7 @@ class App extends Component {
   }
 
   render() {
-    const { text, user } = this.state
+    const { user } = this.state
     const signedIn = !!user
 
     return (
@@ -44,18 +42,10 @@ class App extends Component {
           <Switch>
 
             <Route path='/' exact render={ () => (
-              <Redirect to='/signin' />
+                <SignInPage signedIn={ signedIn } onSignInResponse={ this.onSignInResponse }/>
             )}/>
 
-            <Route path='/signin' exact render={ () => (
-              <SignInForm signedIn={ signedIn } onSignInResponse={ this.onSignInResponse }/>
-            )}/>
-
-            <Route path='/signup' exact render={ () => (
-              <SignUpForm signedIn={ signedIn } onSignInResponse={ this.onSignInResponse }/>
-            )}/>
-
-            <Route path='/signedin' exact render={ () => (
+            <Route path='/app' exact render={ () => (
               <SignedInPage signedIn={ signedIn } onSignOut={ this.onSignOut } />
             )}/>
 
