@@ -1,0 +1,20 @@
+$background: lightgray;
+
+body {
+  background: $background;
+}
+
+h1 {
+  color: red;
+}
+
+p {
+  color: blue;
+}
+
+.main-button {
+  width: 8rem;
+  height: 2rem;
+  background: #89fffd;
+  margin: 10px;
+}
