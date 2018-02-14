@@ -82,6 +82,11 @@ gem 'devise'
 ```
 rails generate devise:install
 ```
+- in config/environments/development.rb:-
+```
+config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+```
 - in config/application.rb
 ```
 ...
@@ -90,9 +95,17 @@ config.to_prepare do
 end
 ...
 ```
+- on command line:-
+```
+rails generate devise User
+rails g controller Auth index
+```
 - in routes.rb
 ```
 devise_for :users, defaults: { format: :json }
+scope :auth do
+  get 'is_signed_in', to: 'auth#index'
+end
 ```
 - in app/controllers/application_controller.rb - change exception to null_session:
 ```
