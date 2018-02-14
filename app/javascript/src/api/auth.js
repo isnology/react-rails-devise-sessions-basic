@@ -1,4 +1,19 @@
-import api, { csrf } from './init'
+import api from './init'
+import axios from 'axios'
+
+function getMetaContent () {
+  const metaTags = document.getElementsByTagName('meta')
+  return metaTags[1].content
+}
+
+function csrf () {
+  axios.defaults.headers.common['X-CSRF-Token'] = getMetaContent("csrf-token")
+}
+
+function getMetaContent () {
+  const metaTags = document.getElementsByTagName('meta')
+  return metaTags[1].content
+}
 
 export function isSignedIn() {
   return api.get("/auth/is_signed_in")

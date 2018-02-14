@@ -1,31 +1,18 @@
 import React, { Component } from 'react'
-import _      from 'lodash'
-import { signIn, signUp } from '../api/auth'
+import { signUp } from '../api/auth'
+import Button from './Button'
+
 
 class SignUpForm extends Component {
-  state = {
-    email: '',
-    password: '',
-    passwordConfirmation: '',
-  }
-
-  onInputChange = (ev) => {
-    // Get a deep clone of the component's state before the input change.
-    let nextState = _.cloneDeep(this.state);
-
-    //Update the state of the component
-    nextState[ev.target.name] = ev.target.value;
-
-    // Update the component's state with the new state
-    this.setState(nextState);
-  }
 
   onRegistrationClick = (e) => {
+    e.preventDefault()
+    const elements = e.target.elements
     const data = {
       user: {
-        email: this.state.email,
-        password: this.state.password,
-        password_confirmation: this.state.passwordConfirmation,
+        email: elements.email.value,
+        password: elements.password.value,
+        password_confirmation: elements.passwordConfirmation.value,
       }
     }
     return signUp(data)
@@ -34,26 +21,33 @@ class SignUpForm extends Component {
 
   render() {
     return (
-        <form>
-          <input type='email'
-                 name='email'
-                 placeholder='email'
-                 value={this.state.email}
-                 onChange={this.onInputChange} />
-
-          <input type='password'
-                 name='password'
-                 placeholder='password'
-                 value={this.state.password}
-                 onChange={this.onInputChange} />
-
-          <input type='password'
-                 name='passwordConfirmation'
-                 placeholder='re-type password'
-                 value={this.state.passwordConfirmation}
-                 onChange={this.onInputChange} />
-
-          <input onClick={this.onRegistrationClick} defaultValue="sign up"/>
+        <form onSubmit={this.onRegistrationClick}>
+          <label>
+            {'Email: '}
+            <input
+                type='email'
+                name='email'
+                defaultValue=""
+            />
+          </label>
+          <label>
+            {'Password: '}
+            <input
+                type='password'
+                name='password'
+                defaultValue=""
+            />
+          </label>
+          <label>
+            {'Re-type Password: '}
+            <input
+                type='password'
+                name='passwordConfirmation'
+                defaultValue=""
+            />
+          </label>
+          <br />
+          <Button>Sign Up</Button>
         </form>
     )
   }

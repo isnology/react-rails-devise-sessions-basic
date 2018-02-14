@@ -1,21 +1,16 @@
 import React, { Component, Fragment } from 'react'
-
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { isSignedIn, signOut } from './api/auth'
 import  SignUpPage  from './components/SignUpPage'
 import  SignInPage  from './components/SignInPage'
 import  SignedInPage  from './components/SignedInPage'
-//import { createBrowserHistory } from 'history'
 
 
 class App extends Component {
   state = {
     text: "How are you all?",
-    action: "signIn",
     user: null
   }
-
-  //history = createBrowserHistory()
 
   ifSignedIn() {
     isSignedIn()
@@ -24,18 +19,10 @@ class App extends Component {
     })
   }
 
-  onSignUp = () => {
-    this.setState({ action: "signUp" })
-  }
-
-  onBack = () => {
-    this.setState({ action: "signIn" })
-  }
-
   onSignOut = () => {
     signOut()
     .then((res) => {
-      this.setState({ action: "signIn", user: null })
+      this.setState({ user: null })
     })
     .catch((error) => {
       //res.status(404).json(error)
@@ -44,12 +31,11 @@ class App extends Component {
   }
 
   onSignInResponse = (data) => {
-    console.log("sign in response:", JSON.stringify(data) )
     this.setState({ user: data })
   }
 
   render() {
-    const { text, user, action } = this.state
+    const { text, user } = this.state
     const signedIn = !!user
 
     return (
@@ -58,21 +44,19 @@ class App extends Component {
           <Switch>
 
             <Route path='/' exact render={ () => (
-              <Redirect to='/app' />
+              !signedIn ? <Redirect to='/signin' /> : <Redirect to='/signedin' />
             )}/>
 
-            <Route path='/app' exact render={ () => (
-                <Fragment>
-                  { !signedIn && action === "signIn" &&
-                  <SignInPage onSignUp={ this.onSignUp } onSignInResponse={ this.onSignInResponse }/>
-                  }
-                  { !signedIn && action === "signUp" &&
-                  <SignUpPage onBack={ this.onBack } onSignInResponse={ this.onSignInResponse }/>
-                  }
-                  { !!signedIn &&
-                  <SignedInPage onSignOut={ this.onSignOut } />
-                  }
-                </Fragment>
+            <Route path='/signin' exact render={ () => (
+              !signedIn ? <SignInPage onSignInResponse={ this.onSignInResponse }/> : <Redirect to='/signedin' />
+            )}/>
+
+            <Route path='/signup' exact render={ () => (
+              !signedIn ? <SignUpPage onSignInResponse={ this.onSignInResponse }/> : <Redirect to='/signedin' />
+            )}/>
+
+            <Route path='/signedin' exact render={ () => (
+              !!signedIn ? <SignedInPage onSignOut={ this.onSignOut } /> : <Redirect to='/signin' />
             )}/>
 
           </Switch>

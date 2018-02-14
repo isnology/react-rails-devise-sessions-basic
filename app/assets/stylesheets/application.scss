@@ -13,8 +13,9 @@ p {
 }
 
 .main-button {
-  width: 8rem;
-  height: 2rem;
+  min-width: 7em;
+  height: 2.2em;
   background: #89fffd;
   margin: 10px;
+  font-size: 15px;
 }

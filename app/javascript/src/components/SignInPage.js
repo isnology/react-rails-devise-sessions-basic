@@ -1,12 +1,14 @@
 import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom'
 import SignInForm from './SignInForm'
 import Button from './Button'
 
-function SignInPage({ onSignUp, onSignInResponse }) {
+function SignInPage({ onSignInResponse }) {
   return (
     <Fragment>
       <SignInForm onSignInResponse={ onSignInResponse }/>
-      <Button onClick={ onSignUp } >Sign Up</Button>
+
+      <Link to="/signup"><Button>Sign Up</Button></Link>
     </Fragment>
   )
 }

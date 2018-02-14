@@ -1,50 +1,48 @@
 import React, { Component } from 'react'
-import _          from 'lodash'
 import { signIn } from '../api/auth'
+import Button from './Button'
 
 
 class SignInForm extends Component {
-  state = {
-    email: '',
-    password: ''
-  }
-
-  onInputChange = (ev) => {
-    // Get a deep clone of the component's state before the input change.
-    let nextState = _.cloneDeep(this.state)
-
-    //Update the state of the component
-    nextState[ev.target.name] = ev.target.value
-
-    // Update the component's state with the new state
-    this.setState(nextState)
-  }
-
 
   onSignInClick = (e) => {
+    e.preventDefault()
+    const elements = e.target.elements
     const data = {
       user: {
-        email: this.state.email,
-        password: this.state.password
+        email: elements.email.value,
+        password: elements.password.value,
       }
     }
     return signIn(data)
     .then((res) => this.props.onSignInResponse(res))
   }
+
   render() {
     return (
-      <form>
-        <input type='email'
-               name='email'
-               placeholder='email'
-               value={this.state.email}
-               onChange={this.onInputChange} />
-        <input type='password'
-               name='password'
-               placeholder='password'
-               value={this.state.password}
-               onChange={this.onInputChange} />
-        <input type='submit' onClick={this.onSignInClick} defaultValue='login' />
+      <form onSubmit={this.onSignInClick}>
+        <div className="form-label">
+        <label>
+          {'Email: '}
+          <input
+              type='email'
+              name='email'
+              defaultValue=""
+          />
+        </label>
+        </div>
+        <div className="form-label">
+        <label>
+          {'Password: '}
+          <input
+              type='password'
+              name='password'
+              defaultValue=""
+          />
+        </label>
+        </div>
+        <br />
+        <Button>Log In</Button>
       </form>
     )
   }
