@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { Link, Redirect } from 'react-router-dom'
 import { signUp } from '../api/auth'
 import Button from './Button'
 
@@ -20,7 +21,11 @@ class SignUpForm extends Component {
   }
 
   render() {
+    const { signedIn } = this.props
+
+    if (signedIn) {return <Redirect to="/signedin" />}
     return (
+      <Fragment>
         <form onSubmit={this.onRegistrationClick}>
           <label>
             {'Email: '}
@@ -49,6 +54,8 @@ class SignUpForm extends Component {
           <br />
           <Button>Sign Up</Button>
         </form>
+        <Link to="/signin"><Button>Back to Sign In</Button></Link>
+      </Fragment>
     )
   }
 }
