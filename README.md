@@ -146,6 +146,10 @@ scope :auth do
   get 'is_signed_in', to: 'auth#index'
 end
 ```
+- also add (to the bottom) a catch all route
+```
+get '*path', to: 'init#index'
+```
 - in app/controllers/application_controller.rb - change exception to null_session:
 ```
 class ApplicationController < ActionController::Base
