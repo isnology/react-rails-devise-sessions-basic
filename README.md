@@ -66,6 +66,45 @@ so it looks like this:-
 <%= javascript_pack_tag 'application' %>
 <%= stylesheet_pack_tag 'application' %>
 ```
+
+# If you want to move all JS to webpack
+- add the node packages
+```
+yarn add rails-ujs turbolinks
+```
+- in app/javascript/packs/application.js
+```
+import Rails from 'rails-ujs'
+import Turbolinks from 'turbolinks'
+
+Rails.start()
+Turbolinks.start()
+```
+- to add bootstrap (you need jquery):-
+```
+yarn add jquery bootstrap@4.0.0 popper.js
+``` 
+- in app/config/webpack/environment.js
+```
+const webpack = require('webpack')
+
+environment.plugins.set('Provide', new webpack.ProvidePlugin({
+  $: 'jquery',
+  jQuery: 'jquery'
+  Popper: ['popper.js', 'default']
+}))
+```
+- import bootstrap in  app/javascript/packs/application.js
+```
+import 'bootstrap/dist/js/bootstrap'
+```
+- in app/javascript/src/styles/app.scss
+```
+@import '~bootstrap/scss/bootstrap';
+```
+- to see full instructions
+https://medium.com/@coorasse/goodbye-sprockets-welcome-webpacker-3-0-ff877fb8fa79
+
 - Note
 - if you use scss from rails you need to refresh the browser to see changes but from react it's automatic
 - advantages of using rails is that gems are easy to install for scss
