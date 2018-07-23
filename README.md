@@ -1,6 +1,8 @@
 # Set Up Devise with React.js and Sessions
 
 - from command line - rails new [project name] --webpack=react --database=postgresql -T
+- you can add "--skip-sprockets" directive to disabling the asset pipeline (if you want to solely use webpack 
+instead) but it will fail on heroku by default so further action is required if you want to go this route.
 
 - create a Procfile.dev in the root directory of the app and add the following lines to it.
 ```
@@ -67,7 +69,14 @@ so it looks like this:-
 <%= stylesheet_pack_tag 'application' %>
 ```
 
-# If you want to move all JS to webpack
+# If you want to move all JS to webpack (not recomended as problems with heroku deployment)
+- remove the following gems from the gemfile
+```
+gem 'sass-rails'
+gem 'uglifier'
+gem 'coffee-rails'
+gem 'turbolinks'
+```
 - add the node packages
 ```
 yarn add rails-ujs turbolinks
@@ -80,7 +89,7 @@ import Turbolinks from 'turbolinks'
 Rails.start()
 Turbolinks.start()
 ```
-- to add bootstrap (you need jquery):-
+- to add bootstrap (you need jquery at the moment):-
 ```
 yarn add jquery bootstrap@4.0.0 popper.js
 ``` 
@@ -90,7 +99,7 @@ const webpack = require('webpack')
 
 environment.plugins.set('Provide', new webpack.ProvidePlugin({
   $: 'jquery',
-  jQuery: 'jquery'
+  jQuery: 'jquery',
   Popper: ['popper.js', 'default']
 }))
 ```
@@ -111,10 +120,11 @@ https://medium.com/@coorasse/goodbye-sprockets-welcome-webpacker-3-0-ff877fb8fa7
 
 - copy directories and files from app/javascript/src/api and app/javascript
 
-# Add Devise
+# Add Devise and rails serializer
 - in gem file:
  ```
 gem 'devise' 
+gem 'active_model_serializers', '~> 0.9.7'
  ```
  - bundle install
  - from command line:
@@ -134,16 +144,32 @@ config.to_prepare do
 end
 ...
 ```
+- create an api_controller.rb file in controllers dirctory as follows:
+```
+class ApiController < ActionController::API
+  include ::ActionController::Serialization
+  respond_to :json
+end
+``` 
+- add an 'api' sub directory to the 'controllers' directory
 - on command line:-
 ```
 rails generate devise User
-rails g controller Auth index
+rails g controller api/Auth index
+```
+- change the AuthController class to:
+```
+class Api::AuthController < ApiController
 ```
 - in routes.rb
 ```
 devise_for :users, defaults: { format: :json }
-scope :auth do
-  get 'is_signed_in', to: 'auth#index'
+
+namespace :api, defaults: { format: :json } do
+
+  scope :auth do
+    get 'is_signed_in', to: 'auth#index'
+  end
 end
 ```
 - also add (to the bottom) a catch all route
@@ -158,7 +184,7 @@ end
 ```
 
 - note, in app/javascript/src/api/init.js that axios uses "withCredentials: true" and the csrf function (used in 
-app/javascript/src/api/auth.js)
+app/javascript/src/api/init.js)
 
 - also note that everything in app/javascript/src/components is for testing the sign in sign out sign up process
  
