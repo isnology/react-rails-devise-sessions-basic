@@ -6,7 +6,6 @@ instead) but it will fail on heroku by default so further action is required if 
 
 - create a Procfile.dev in the root directory of the app and add the following lines to it.
 ```
-web: bundle exec rails s
 webpacker: ./bin/webpack-dev-server
 ```
 - if you don't have foreman installed then install into your home directory (out side your app) as follows:-
@@ -188,6 +187,11 @@ app/javascript/src/api/init.js)
 
 - also note that everything in app/javascript/src/components is for testing the sign in sign out sign up process
  
-# to start the server run the following command
+# to start the babel server run the following command
 
-foreman start -f Procfile.dev -p 3000
+foreman start -f Procfile.dev
+
+- forman loads up the .env variables so they are accessible with process.env.xxxxxx inside react (no need for dotenv 
+module)
+
+- You will also need to start the Rails server
